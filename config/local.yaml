@@ -1,0 +1,14 @@
+grpc:
+  host: "localhost"
+  port: 50051
+  services: ["", "SensorService"]
+postgres:
+  dsn: "postgresql://localhost:5432/dat"
+  max_query_latency_ms: 500
+service:
+  health_url: "http://localhost:8080/health"
+reporting:
+  console: true
+  json_output_dir: "results"
+runner:
+  parallel: false

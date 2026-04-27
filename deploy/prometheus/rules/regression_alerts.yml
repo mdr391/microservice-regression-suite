@@ -1,0 +1,31 @@
+groups:
+  - name: regression_alerts
+    interval: 60s
+    rules:
+      - alert: RegressionCriticalFailure
+        expr: regression_check_status{severity="critical"} == 0
+        for: 2m
+        labels: {severity: critical}
+        annotations:
+          summary: "CRITICAL: {{ $labels.check_name }} failing in {{ $labels.environment }}"
+
+      - alert: RegressionPassRateLow
+        expr: regression_suite_pass_rate < 0.8
+        for: 5m
+        labels: {severity: high}
+        annotations:
+          summary: "Pass rate below 80%: {{ $value | humanizePercentage }}"
+
+      - alert: RegressionLatencyHigh
+        expr: regression_check_duration_ms{check_name=~"grpc.latency.*"} > 200
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "gRPC latency SLO breach: {{ $labels.check_name }}"
+
+      - alert: RegressionSuiteStale
+        expr: time() - push_time_seconds{job="regression"} > 1800
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: "No regression results in 30+ minutes"

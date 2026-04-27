@@ -1,0 +1,19 @@
+grpc:
+  host: "sensor-service.prod.svc.cluster.local"
+  port: 50051
+  services: ["", "SensorService"]
+postgres:
+  dsn: "postgresql://readonly:${DB_PASSWORD}@db.prod.svc:5432/production"
+  max_query_latency_ms: 200
+service:
+  health_url: "http://sensor-service.prod.svc:8080/health"
+reporting:
+  console: false
+  json_output_dir: "/var/log/regression/results"
+  slack_webhook: "${SLACK_WEBHOOK_URL}"
+  prometheus:
+    enabled: true
+    pushgateway_url: "http://pushgateway.monitoring.svc:9091"
+    environment: "production"
+runner:
+  parallel: true
