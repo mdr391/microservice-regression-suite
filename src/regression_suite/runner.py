@@ -4,7 +4,8 @@ from __future__ import annotations
 import logging
 import time
 import traceback
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
 from datetime import datetime
 
 from .core import CheckPort, CheckResult, CheckStatus, ReporterPort, SuiteResult
@@ -23,16 +24,23 @@ def _run_with_timeout(check: CheckPort) -> CheckResult:
             except FutureTimeout:
                 elapsed = (time.perf_counter() - start) * 1000
                 return CheckResult(
-                    name=check.name, suite=check.suite, status=CheckStatus.TIMEOUT,
+                    name=check.name,
+                    suite=check.suite,
+                    status=CheckStatus.TIMEOUT,
                     message=f"Timed out after {check.timeout_seconds}s",
-                    duration_ms=elapsed, severity=check.severity,
+                    duration_ms=elapsed,
+                    severity=check.severity,
                 )
     except Exception:
         elapsed = (time.perf_counter() - start) * 1000
         return CheckResult(
-            name=check.name, suite=check.suite, status=CheckStatus.ERROR,
-            message="Unexpected error", duration_ms=elapsed,
-            severity=check.severity, error=traceback.format_exc(),
+            name=check.name,
+            suite=check.suite,
+            status=CheckStatus.ERROR,
+            message="Unexpected error",
+            duration_ms=elapsed,
+            severity=check.severity,
+            error=traceback.format_exc(),
         )
 
 
@@ -64,7 +72,11 @@ class RegressionRunner:
     ) -> SuiteResult:
         checks = [c for c in self._checks if not suite_filter or c.suite == suite_filter]
         suite_name = suite_filter or "full-regression"
-        result = SuiteResult(suite_name=suite_name, started_at=datetime.utcnow(), config_used=config or {})
+        result = SuiteResult(
+            suite_name=suite_name,
+            started_at=datetime.utcnow(),
+            config_used=config or {},
+        )
 
         logger.info(f"Starting '{suite_name}' with {len(checks)} checks")
 
@@ -80,7 +92,10 @@ class RegressionRunner:
                 result.results.append(r)
 
         result.finished_at = datetime.utcnow()
-        logger.info(f"'{suite_name}': {result.passed_count}/{result.total} passed ({result.pass_rate:.0%}) in {result.duration_ms:.0f}ms")
+        logger.info(
+            f"'{suite_name}': {result.passed_count}/{result.total} passed"
+            f" ({result.pass_rate:.0%}) in {result.duration_ms:.0f}ms"
+        )
 
         for failure in result.critical_failures:
             logger.error(f"CRITICAL: {failure.name} — {failure.message}")
