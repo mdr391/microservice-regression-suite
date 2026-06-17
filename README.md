@@ -122,6 +122,4 @@ Pre-built Prometheus alerts in `deploy/prometheus/rules/`:
 4. **Severity-based alerting** — CRITICAL fires Slack immediately. MEDIUM shows on dashboards.
 5. **Configuration-driven** — same code, different YAML config per environment.
 
-## License
-
-MIT
+Copyright © 2026 Zahidur Rahman
