@@ -1,7 +1,6 @@
 # Microservice Regression Test Suite
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://docs.astral.sh/ruff/)
 
 A production-grade, periodic regression test suite for verifying **gRPC microservices**, **PostgreSQL databases**, and **service health** in distributed systems. Built with **hexagonal architecture** — the same pattern the services it tests are built with.
